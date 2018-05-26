@@ -40,6 +40,7 @@ def calc_critical_pts(ineqs, verbose = False):
     critical_max_pts = []
     critical_min_pts = []
     
+    #ADDED SOMETHING HERE
     #TODO: Replace all of this with simpler system with no need for critical_pts
     #create list that represents the empty gaps between inequalities with'min',
     #'max', 'incr' or 'decr'. Then populate this list with the correct integers
