@@ -10,9 +10,9 @@ Places N distinct integers in a sequence of N-1 random inequalities.
 import sys
 from random import sample, randint
 
-def n_distinct_int(n=10, maximum=25):
-    """Returns a list of 10 distinct integers between 1 and maximum(=25)."""
-    selection = range(1,maximum+1)
+def n_distinct_int(n):
+    """Returns a list of n distinct integers between 1 and 2n."""
+    selection = range(1,2*n)
     return sample(selection,n)
 
 def random_inequalities(n=9):
@@ -26,6 +26,10 @@ def place_ints(ints, ineqs):
     next inequality is '<' then the minimum in the list is placed before it. If
     the inequality is '>' then the maximum in the list is chosen.
     """
+    assert type(ints) == list and ints != [],\
+           "Pass a list containing at least one integer." 
+    assert len(ineqs) == len(ints)-1,\
+           "There must be one fewer inequality than there are integers."
     ints.sort()
     correct_order = []
     
@@ -39,37 +43,33 @@ def place_ints(ints, ineqs):
     correct_order.append(ints.pop())
     return correct_order
             
-def solve_ineq_problem(n=10, ret_ineqs=False):
+def solve_ineq_problem(n=10, verbose='v'):
     """
     Solves the inequality problem for n distinct integers and n-1 random
     inequalities. 
-    Returns a list with the integers arranged into the correct order.
-    The inequalities are also returned if ret_ineqs == True
+    Returns a string with the integers placed bewteen the inequalities in the
+    correct order. The string is printed if verbose='v'
     """
-    ints = n_distinct_int(n,n*2)
+    ints = n_distinct_int(n)
     ineqs = random_inequalities(n-1)
-    solution = place_ints(ints,ineqs)
-    
-    if ret_ineqs == False:
-        return solution
-    else:
-        return [solution,ineqs]
-
-def solve_and_print(n=10):
-    """
-    Solves the inequality problem for n distinct integers and n-1 random 
-    inequalities, then prints a string with the integers placed between the 
-    inequalities.
-    """
-    ints, ineqs = solve_ineq_problem(n, ret_ineqs = True)
-    printable = ' '.join(f'{i} {ineq}' for i, ineq in zip(ints,ineqs + ['']))
-    print(printable.strip())
+    soln = place_ints(ints,ineqs)
+    printable = ' '.join(f'{i} {ineq}' for i, ineq in zip(soln,ineqs + ['']))
+    if verbose == 'v':
+        print(printable.strip())
+    return printable
     
 def main(argv=None):
     """Command line argument is N, must be integer"""
     if argv is None:
         argv = sys.argv
-        solve_and_print(int(argv[1]))
+        if len(argv) == 3:
+            #used for verbosity
+            solve_ineq_problem(int(argv[1]), argv[2])
+        elif len(argv) == 2:
+            #defining n in the problem
+            solve_ineq_problem(int(argv[1]))
+        else:
+            solve_ineq_problem()
     return 0
 
 if __name__ == '__main__':
